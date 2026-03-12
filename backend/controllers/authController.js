@@ -3,10 +3,9 @@ const jwt = require('jsonwebtoken');
 const { findUserByEmail, createUser } = require('../models/userModel');
 
 exports.register = async (req, res) => {
+
   try {
-
-    const { name, email, password, role } = req.body;
-
+    const { name, email, password } = req.body;
     const existingUser = await findUserByEmail(email);
 
     if (existingUser) {
@@ -19,12 +18,14 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role: "user"
     };
 
     await createUser(newUser);
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully"
+    });
 
   } catch (error) {
     res.status(500).json(error.message);
@@ -33,9 +34,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-
     const { email, password } = req.body;
-
     const user = await findUserByEmail(email);
 
     if (!user) {
@@ -66,4 +65,5 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).json(error.message);
   }
+
 };
