@@ -17,6 +17,9 @@ function Login() {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
+      localStorage.setItem("userId", res.data.id);
+
+      console.log("Logged in user ID:", res.data.id);
 
       if (res.data.role === "organizer") {
         navigate("/my-events");
