@@ -16,11 +16,12 @@ function Login() {
       });
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
 
       if (res.data.role === "organizer") {
-        navigate("/organizer-dashboard");
+        navigate("/my-events");
       } else {
-        navigate("/user-dashboard");
+        navigate("/events");
       }
     } catch (err) {
       console.error(err);
