@@ -5,8 +5,8 @@ import Navigation from "../../components/Navigation";
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editingEventId, setEditingEventId] = useState(null);
 
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -37,7 +37,6 @@ const MyEvents = () => {
       return;
     }
 
-    // Format event_date for Postgres timestamp
     const formattedDate = event_date + "T00:00:00";
 
     try {
@@ -51,7 +50,6 @@ const MyEvents = () => {
         organizer_id: organizerId,
       });
 
-      // Reset form
       setTitle("");
       setDescription("");
       setLocation("");
@@ -68,6 +66,76 @@ const MyEvents = () => {
     }
   };
 
+  const deleteEvent = async (id) => {
+    if (!window.confirm("Delete this event?")) return;
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/events/delete/${id}`
+      );
+
+      fetchEvents();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  };
+
+  const updateEvent = async () => {
+
+    const formattedDate = event_date + "T00:00:00";
+    try {
+
+      await axios.put(
+        `http://localhost:5000/api/events/update/${editingEventId}`,
+        {
+          title,
+          description,
+          location,
+          event_date: formattedDate,
+          ticket_price: parseFloat(ticket_price) || 0,
+          total_tickets: parseInt(total_tickets) || 0
+        }
+      );
+
+      setShowModal(false);
+      setEditingEventId(null);
+
+      fetchEvents();
+
+    } catch (err) {
+      console.error("Update failed:", err);
+    }
+  };
+
+  const openCreateModal = () => {
+
+    setEditingEventId(null);
+
+    setTitle("");
+    setDescription("");
+    setLocation("");
+    setEventDate("");
+    setTicketPrice("");
+    setTotalTickets("");
+
+    setShowModal(true);
+
+  };
+
+  const openEditModal = (event) => {
+
+    setTitle(event.title);
+    setDescription(event.description);
+    setLocation(event.location);
+    setEventDate(event.event_date.split("T")[0]);
+    setTicketPrice(event.ticket_price);
+    setTotalTickets(event.total_tickets);
+
+    setEditingEventId(event.id);
+
+    setShowModal(true);
+
+  };
+
   return (
     <div>
       <Navigation role="organizer" />
@@ -76,7 +144,7 @@ const MyEvents = () => {
         <h1 className="text-2xl font-bold mb-4">My Events</h1>
 
         <button
-          onClick={() => setShowModal(true)}
+          onClick={openCreateModal}
           className="bg-blue-500 text-white px-4 py-2 rounded mb-6"
         >
           Create New Event
@@ -85,12 +153,32 @@ const MyEvents = () => {
         <div className="grid grid-cols-3 gap-4">
           {events.map((event) => (
             <div key={event.id} className="border p-4 rounded shadow">
+
               <h2 className="text-xl font-bold">{event.title}</h2>
               <p>{event.description}</p>
               <p className="text-sm text-gray-500">{event.location}</p>
               <p className="text-sm">
                 {new Date(event.event_date).toLocaleDateString()}
               </p>
+
+              <div className="flex gap-2 mt-3">
+
+                <button
+                  onClick={() => openEditModal(event)}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => deleteEvent(event.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+
+              </div>
+
             </div>
           ))}
         </div>
@@ -98,9 +186,9 @@ const MyEvents = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded w-96">
-            <h2 className="text-xl font-bold mb-4">Create Event</h2>
+            <h2 className="text-xl font-bold mb-4">{editingEventId ? "Edit Event" : "Create Event"}</h2>
 
             <div className="flex flex-col gap-2">
               <input
@@ -148,16 +236,19 @@ const MyEvents = () => {
 
             <div className="flex justify-end gap-2 mt-4">
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setEditingEventId(null);
+                }}
                 className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 Close
               </button>
               <button
-                onClick={createEvent}
+                onClick={editingEventId ? updateEvent : createEvent}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Create Event
+                {editingEventId ? "Update Event" : "Create Event"}
               </button>
             </div>
           </div>

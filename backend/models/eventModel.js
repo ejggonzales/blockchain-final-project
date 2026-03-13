@@ -24,3 +24,30 @@ exports.getEventsByOrganizer = async (organizer_id) => {
 
   return data;
 };
+
+  exports.updateEvent = async (id, updatedEvent) => {
+
+    const { data, error } = await supabase
+      .from("events")
+      .update(updatedEvent)
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+
+    return data;
+
+  };
+
+  exports.deleteEvent = async (id) => {
+
+    const { data, error } = await supabase
+      .from("events")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+
+    return data;
+
+  };
