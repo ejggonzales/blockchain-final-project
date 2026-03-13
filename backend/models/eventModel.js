@@ -51,3 +51,13 @@ exports.getEventsByOrganizer = async (organizer_id) => {
     return data;
 
   };
+
+  exports.getAllEvents = async () => {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+  };

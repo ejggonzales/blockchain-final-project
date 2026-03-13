@@ -2,7 +2,8 @@ const {
   createEvent,
   getEventsByOrganizer,
   updateEvent: updateEventModel,
-  deleteEvent: deleteEventModel
+  deleteEvent: deleteEventModel,
+  getAllEvents: getAllEventsModel
 } = require("../models/eventModel");
 
 exports.createEvent = async (req, res) => {
@@ -75,6 +76,15 @@ exports.deleteEvent = async (req, res) => {
     res.json({ message: "Event deleted successfully" });
   } catch (error) {
 
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllEvents = async (req, res) => {
+  try {
+    const events = await getAllEventsModel();
+    res.json(events);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
