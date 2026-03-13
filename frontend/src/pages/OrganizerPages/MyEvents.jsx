@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../../components/Navigation";
+import supabaseStorage from "../../supabaseStorage";
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
@@ -11,8 +12,10 @@ const MyEvents = () => {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [event_date, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
   const [ticket_price, setTicketPrice] = useState("");
   const [total_tickets, setTotalTickets] = useState("");
+  const [image, setImage] = useState(null);
 
   const organizerId = localStorage.getItem("userId");
 
@@ -39,14 +42,35 @@ const MyEvents = () => {
 
     const formattedDate = event_date + "T00:00:00";
 
+    let imageUrl = null;
+
+    if (image) {
+
+      const fileName = `${Date.now()}-${image.name}`;
+
+      const { data, error } = await supabaseStorage.storage
+        .from("event-images")
+        .upload(fileName, image);
+
+      if (error) {
+        console.error(error);
+        alert("Image upload failed");
+        return;
+      }
+
+      imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
+    }
+
     try {
       await axios.post("http://localhost:5000/api/events/create", {
         title,
         description,
         location,
         event_date: formattedDate,
+        event_time: eventTime,
         ticket_price: parseFloat(ticket_price) || 0,
         total_tickets: parseInt(total_tickets) || 0,
+        image_url: imageUrl,
         organizer_id: organizerId,
       });
 
@@ -54,6 +78,7 @@ const MyEvents = () => {
       setDescription("");
       setLocation("");
       setEventDate("");
+      setEventTime("");
       setTicketPrice("");
       setTotalTickets("");
 
@@ -82,6 +107,24 @@ const MyEvents = () => {
   const updateEvent = async () => {
 
     const formattedDate = event_date + "T00:00:00";
+
+    let imageUrl = null;
+
+    if (image) {
+      const fileName = `${Date.now()}-${image.name}`;
+      const { data, error } = await supabaseStorage.storage
+        .from("event-images")
+        .upload(fileName, image);
+
+      if (error) {
+        console.error(error);
+        alert("Image upload failed");
+        return;
+      }
+
+      imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
+    }
+
     try {
 
       await axios.put(
@@ -91,13 +134,16 @@ const MyEvents = () => {
           description,
           location,
           event_date: formattedDate,
+          event_time: eventTime,
           ticket_price: parseFloat(ticket_price) || 0,
-          total_tickets: parseInt(total_tickets) || 0
+          total_tickets: parseInt(total_tickets) || 0,
+          ...(imageUrl && { image_url: imageUrl })
         }
       );
 
       setShowModal(false);
       setEditingEventId(null);
+      setImage(null);
 
       fetchEvents();
 
@@ -114,8 +160,10 @@ const MyEvents = () => {
     setDescription("");
     setLocation("");
     setEventDate("");
+    setEventTime("");
     setTicketPrice("");
     setTotalTickets("");
+    setImage(null);
 
     setShowModal(true);
 
@@ -127,6 +175,7 @@ const MyEvents = () => {
     setDescription(event.description);
     setLocation(event.location);
     setEventDate(event.event_date.split("T")[0]);
+    setEventTime(event.event_time);
     setTicketPrice(event.ticket_price);
     setTotalTickets(event.total_tickets);
 
@@ -154,12 +203,29 @@ const MyEvents = () => {
           {events.map((event) => (
             <div key={event.id} className="border p-4 rounded shadow">
 
+              {event.image_url && (
+                <img
+                  src={event.image_url}
+                  alt={event.title}
+                  className="w-full h-40 object-cover rounded mb-2"
+                />
+              )}
               <h2 className="text-xl font-bold">{event.title}</h2>
               <p>{event.description}</p>
               <p className="text-sm text-gray-500">{event.location}</p>
               <p className="text-sm">
                 {new Date(event.event_date).toLocaleDateString()}
               </p>
+              <p>
+                Time: {new Date(`1970-01-01T${event.event_time}`).toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </p>
+              <p>Ticket Price: {event.ticket_price} Wei</p>
+              <p>Total Tickets: {event.total_tickets} tickets</p>
+
 
               <div className="flex gap-2 mt-3">
 
@@ -219,8 +285,14 @@ const MyEvents = () => {
                 className="border px-2 py-1 rounded"
               />
               <input
+                type="time"
+                value={eventTime}
+                onChange={(e) => setEventTime(e.target.value)}
+                className="border p-2 rounded w-full"
+              />
+              <input
                 type="number"
-                placeholder="Ticket Price (ETH)"
+                placeholder="Ticket Price (Wei)"
                 value={ticket_price}
                 onChange={(e) => setTicketPrice(e.target.value)}
                 className="border px-2 py-1 rounded"
@@ -230,6 +302,12 @@ const MyEvents = () => {
                 placeholder="Total Tickets"
                 value={total_tickets}
                 onChange={(e) => setTotalTickets(e.target.value)}
+                className="border px-2 py-1 rounded"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
                 className="border px-2 py-1 rounded"
               />
             </div>

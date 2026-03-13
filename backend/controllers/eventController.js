@@ -14,8 +14,10 @@ exports.createEvent = async (req, res) => {
       description,
       location,
       event_date,
+      event_time,
       ticket_price,
       total_tickets,
+      image_url,
       organizer_id
     } = req.body;
 
@@ -24,8 +26,10 @@ exports.createEvent = async (req, res) => {
       description,
       location,
       event_date,
+      event_time,
       ticket_price,
       total_tickets,
+      image_url,
       organizer_id
     };
 
