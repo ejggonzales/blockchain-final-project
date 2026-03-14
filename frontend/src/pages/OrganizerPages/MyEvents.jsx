@@ -80,27 +80,6 @@ const MyEvents = () => {
     }
   };
 
-  const createEventOnBlockchain = async (totalTickets) => {
-    if (!window.ethereum) throw new Error("MetaMask not detected");
-
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, EventTicketABI, signer);
-
-      const tx = await contract.createEvent(totalTickets);
-      await tx.wait();
-
-      const nextEventId = await contract.nextEventId();
-      const blockchain_event_id = (BigInt(nextEventId) - 1n).toString();
-
-      return blockchain_event_id;
-    } catch (err) {
-      console.error("Blockchain event creation failed:", err);
-      throw err;
-    }
-  };
-
   const createEvent = async () => {
     if (!title || !event_date || !total_tickets) {
       alert("Please fill in all required fields");
@@ -140,8 +119,20 @@ const MyEvents = () => {
       organizer_id: organizerId,
     });
 
+    setTitle("");
+    setDescription("");
+    setLocation("");
+    setEventDate("");
+    setEventTime("");
+    setTicketPrice("");
+    setTotalTickets("");
+
     setShowModal(false);
     fetchEvents();
+  } catch (err) {
+      console.error("Error creating event:", err.response?.data || err.message);
+      alert("Failed to create event. Check console for details.");
+    }
   };
 
   const updateEvent = async () => {
