@@ -165,7 +165,7 @@ const Events = () => {
                                 <div className="mt-auto">
                                     <button
                                         onClick={() => setSelectedEvent(event)}
-                                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition"
+                                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer"
                                         style={{ backgroundColor: "#111827", color: "#fff" }}
                                         onMouseEnter={e => e.currentTarget.style.backgroundColor = "#1f2937"}
                                         onMouseLeave={e => e.currentTarget.style.backgroundColor = "#111827"}
@@ -239,7 +239,7 @@ const Events = () => {
                                         </div>
                                         <button
                                             onClick={disconnectWallet}
-                                            className="text-xs text-red-500 hover:text-red-600 font-semibold transition"
+                                            className="text-xs text-red-500 hover:text-red-600 font-semibold transition cursor-pointer"
                                         >
                                             Disconnect
                                         </button>
@@ -247,7 +247,7 @@ const Events = () => {
                                 ) : (
                                     <button
                                         onClick={connectWallet}
-                                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold mb-4 transition"
+                                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold mb-4 transition cursor-pointer"
                                         style={{ backgroundColor: "#4a7a72", color: "#fff" }}
                                         onMouseEnter={e => e.currentTarget.style.backgroundColor = "#3d6b63"}
                                         onMouseLeave={e => e.currentTarget.style.backgroundColor = "#4a7a72"}
@@ -263,17 +263,17 @@ const Events = () => {
                                     <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden">
                                         <button
                                             onClick={() => setTicketsToBuy(t => Math.max(1, t - 1))}
-                                            className="px-3 py-2.5 text-gray-500 hover:bg-gray-100 transition text-lg font-bold"
+                                            className="px-3 py-2.5 text-gray-500 hover:bg-gray-100 transition text-lg font-bold cursor-pointer"
                                         >−</button>
                                         <span className="px-4 py-2.5 text-sm font-semibold text-gray-800 min-w-[40px] text-center">{ticketsToBuy}</span>
                                         <button
                                             onClick={() => setTicketsToBuy(t => Math.min(selectedEvent.total_tickets, t + 1))}
-                                            className="px-3 py-2.5 text-gray-500 hover:bg-gray-100 transition text-lg font-bold"
+                                            className="px-3 py-2.5 text-gray-500 hover:bg-gray-100 transition text-lg font-bold cursor-pointer"
                                         >+</button>
                                     </div>
                                     <button
                                         onClick={() => buyTickets(selectedEvent, ticketsToBuy)}
-                                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition bg-emerald-600 hover:bg-emerald-700 text-white"
+                                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
@@ -285,7 +285,7 @@ const Events = () => {
 
                             <button
                                 onClick={() => setSelectedEvent(null)}
-                                className="w-full mt-3 py-2.5 rounded-xl text-sm font-semibold border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition"
+                                className="w-full mt-3 py-2.5 rounded-xl text-sm font-semibold border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition cursor-pointer"
                             >
                                 Close
                             </button>

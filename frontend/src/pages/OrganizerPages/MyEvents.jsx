@@ -173,7 +173,7 @@ const MyEvents = () => {
           <h1 className="text-3xl font-semibold text-gray-800">My Events</h1>
           <button
             onClick={openCreateModal}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg shadow-md transition"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg shadow-md transition cursor-pointer"
           >
             + Create Event
           </button>
@@ -186,7 +186,7 @@ const MyEvents = () => {
               className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col"
               style={{ border: "1px solid #f0f0f0" }}
             >
-              {/* Image Section */}
+
               <div className="relative bg-gray-100" style={{ height: "220px" }}>
                 {event.image_url ? (
                   <img
@@ -210,7 +210,6 @@ const MyEvents = () => {
                 </div>
               </div>
 
-              {/* Card Body */}
               <div className="p-5 flex flex-col flex-grow">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3 leading-snug">
                   {event.title}
@@ -235,7 +234,6 @@ const MyEvents = () => {
 
                 </div>
 
-                {/* Details */}
                 <div className="space-y-1.5 text-gray-600 text-sm mb-5">
                   <div className="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -261,11 +259,10 @@ const MyEvents = () => {
                   </p>
                 </div>
 
-                {/* Action Buttons*/}
                 <div className="flex gap-3 mt-auto">
                   <button
                     onClick={() => openEditModal(event)}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer"
                     style={{ backgroundColor: "#111827", color: "#fff" }}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = "#1f2937"}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = "#111827"}
@@ -277,7 +274,7 @@ const MyEvents = () => {
                   </button>
                   <button
                     onClick={() => deleteEvent(event.id)}
-                    className="flex items-center justify-center px-4 py-2.5 rounded-xl border-2 transition"
+                    className="flex items-center justify-center px-4 py-2.5 rounded-xl border-2 transition cursor-pointer"
                     style={{ borderColor: "#EF4444", color: "#EF4444" }}
                     onMouseEnter={e => { e.currentTarget.style.backgroundColor = "#EF4444"; e.currentTarget.style.color = "#fff"; }}
                     onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#EF4444"; }}
@@ -420,13 +417,13 @@ const MyEvents = () => {
                     setEditingEventId(null);
                     setImage(null);
                   }}
-                  className="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-700 transition"
+                  className="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-700 transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition"
+                  className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition cursor-pointer"
                 >
                   {editingEventId ? "Update Event" : "Create Event"}
                 </button>
