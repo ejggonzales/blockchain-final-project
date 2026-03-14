@@ -352,6 +352,11 @@ const MyEvents = () => {
                     type="date"
                     value={event_date}
                     onChange={(e) => setEventDate(e.target.value)}
+                    min={
+                      editingEventId
+                        ? event_date
+                        : new Date().toISOString().split("T")[0]
+                    }
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition"
                     required
                   />
@@ -379,8 +384,9 @@ const MyEvents = () => {
                     type="number"
                     value={ticket_price}
                     onChange={(e) => setTicketPrice(e.target.value)}
+                    disabled={editingEventId !== null}
                     min={0}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition disabled:text-gray-400"
                   />
                 </div>
 
@@ -392,8 +398,9 @@ const MyEvents = () => {
                     type="number"
                     value={total_tickets}
                     onChange={(e) => setTotalTickets(e.target.value)}
+                    disabled={editingEventId !== null}
                     min={0}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition disabled:text-gray-400"
                   />
                 </div>
               </div>
