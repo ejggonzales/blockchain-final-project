@@ -9,7 +9,6 @@ const MyTickets = () => {
       
       <Navigation role={role} />
 
-      {/* Page Content */}
       <div className="pt-32 px-6">
         <h1 className="text-2xl font-bold mb-2">My Tickets</h1>
 

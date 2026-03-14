@@ -85,11 +85,9 @@ const Events = () => {
             {/* Main Content */}
             <div className="pt-32 max-w-7xl mx-auto p-6">
 
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <h1 className="text-3xl font-semibold text-gray-800">Events</h1>
 
-                    {/* Search */}
                     <div className="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -104,7 +102,6 @@ const Events = () => {
                     </div>
                 </div>
 
-                {/* Cards Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredEvents.map((event) => (
                         <div
@@ -112,7 +109,7 @@ const Events = () => {
                             className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col"
                             style={{ border: "1px solid #f0f0f0" }}
                         >
-                            {/* Image */}
+
                             <div className="relative bg-gray-100" style={{ height: "220px" }}>
                                 {event.image_url ? (
                                     <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
@@ -128,7 +125,6 @@ const Events = () => {
                                 </div>
                             </div>
 
-                            {/* Card Body */}
                             <div className="p-5 flex flex-col flex-grow">
                                 <h2 className="text-lg font-semibold text-gray-900 mb-3 leading-snug">{event.title}</h2>
 
@@ -166,7 +162,6 @@ const Events = () => {
                                     </div>
                                 </div>
 
-                                {/* View Details Button */}
                                 <div className="mt-auto">
                                     <button
                                         onClick={() => setSelectedEvent(event)}
@@ -192,7 +187,6 @@ const Events = () => {
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
                     <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
 
-                        {/* Modal Image */}
                         {selectedEvent.image_url && (
                             <div className="relative h-56 w-full">
                                 <img src={selectedEvent.image_url} alt={selectedEvent.title} className="w-full h-full object-cover rounded-t-2xl" />
@@ -205,7 +199,6 @@ const Events = () => {
                         <div className="p-6">
                             <h2 className="text-2xl font-bold text-gray-900 mb-1">{selectedEvent.title}</h2>
 
-                            {/* Price + Date */}
                             <div className="flex items-center gap-3 mb-4">
                                 <span className="text-2xl font-bold text-gray-900">{selectedEvent.ticket_price} Wei</span>
                                 <div className="flex items-center gap-1 ml-auto">
@@ -218,7 +211,6 @@ const Events = () => {
                                 </div>
                             </div>
 
-                            {/* Details */}
                             <div className="space-y-1.5 text-gray-600 text-sm mb-4">
                                 <div className="flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -239,7 +231,6 @@ const Events = () => {
 
                             <div className="border-t border-gray-100 pt-4">
 
-                                {/* Wallet Status */}
                                 {account ? (
                                     <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 mb-4">
                                         <div className="flex items-center gap-2">
@@ -268,7 +259,6 @@ const Events = () => {
                                     </button>
                                 )}
 
-                                {/* Quantity + Buy */}
                                 <div className="flex gap-3">
                                     <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden">
                                         <button
@@ -293,7 +283,6 @@ const Events = () => {
                                 </div>
                             </div>
 
-                            {/* Close */}
                             <button
                                 onClick={() => setSelectedEvent(null)}
                                 className="w-full mt-3 py-2.5 rounded-xl text-sm font-semibold border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition"
