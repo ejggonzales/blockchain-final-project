@@ -117,6 +117,7 @@ const MyEvents = () => {
       total_tickets: parseInt(total_tickets) || 0,
       image_url: imageUrl,
       organizer_id: organizerId,
+      blockchain_event_id
     });
 
     setTitle("");
