@@ -7,6 +7,7 @@ const Events = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [ticketsToBuy, setTicketsToBuy] = useState(1);
     const [account, setAccount] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         fetchEvents();
@@ -43,6 +44,10 @@ const Events = () => {
         alert("Wallet disconnected");
     };
 
+    const filteredEvents = events.filter((event) =>
+        event.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div>
             <Navigation role="user" />
@@ -50,8 +55,16 @@ const Events = () => {
             <div className="p-6">
                 <h1 className="text-2xl font-bold mb-4">Events</h1>
 
+                <input
+                    type="text"
+                    placeholder="Search events..."
+                    className="w-50 p-2 mb-4 border rounded-lg"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+
                 <div className="grid grid-cols-3 gap-4">
-                    {events.map((event) => (
+                    {filteredEvents.map((event) => (
                         <div key={event.id} className="border p-4 rounded shadow">
                             {event.image_url && (
                                 <img
