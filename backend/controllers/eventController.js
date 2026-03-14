@@ -19,7 +19,8 @@ exports.createEvent = async (req, res) => {
       ticket_price,
       total_tickets,
       image_url,
-      organizer_id
+      organizer_id,
+      blockchain_event_id
     } = req.body;
 
     const event = {
@@ -31,7 +32,8 @@ exports.createEvent = async (req, res) => {
       ticket_price,
       total_tickets,
       image_url,
-      organizer_id
+      organizer_id,
+      blockchain_event_id
     };
 
     const newEvent = await createEvent(event);
@@ -61,6 +63,7 @@ exports.updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedEvent = req.body;
+    delete updatedEvent.blockchain_event_id;
     const result = await updateEventModel(id, updatedEvent);
     res.json(result);
 

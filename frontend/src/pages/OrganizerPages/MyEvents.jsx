@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../../components/Navigation";
 import supabaseStorage from "../../supabaseStorage";
+import { ethers } from "ethers";
+import EventTicketABI from "../../EventTicketABI.json";
+
+const contractAddress = "0xfEa8b30718FC87208aD682C6Aefd789fD21F80dF";
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
@@ -34,34 +38,54 @@ const MyEvents = () => {
     }
   };
 
+  const createEventOnBlockchain = async (totalTickets) => {
+    if (!window.ethereum) throw new Error("MetaMask not detected");
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, EventTicketABI, signer);
+
+      const tx = await contract.createEvent(totalTickets);
+      await tx.wait();
+
+      const nextEventId = await contract.nextEventId();
+      const blockchain_event_id = (BigInt(nextEventId) - 1n).toString();
+
+      return blockchain_event_id;
+    } catch (err) {
+      console.error("Blockchain event creation failed:", err);
+      throw err;
+    }
+  };
+
   const createEvent = async () => {
-    if (!title || !event_date) {
-      alert("Please fill in at least title and date.");
+    if (!title || !event_date || !total_tickets) {
+      alert("Please fill in all required fields");
       return;
     }
 
     const formattedDate = event_date + "T00:00:00";
 
-    let imageUrl = null;
+    try {
+      const blockchain_event_id = await createEventOnBlockchain(parseInt(total_tickets));
 
-    if (image) {
+      let imageUrl = null;
+      if (image) {
+        const fileName = `${Date.now()}-${image.name}`;
+        const { data, error } = await supabaseStorage.storage
+          .from("event-images")
+          .upload(fileName, image);
 
-      const fileName = `${Date.now()}-${image.name}`;
+        if (error) {
+          console.error(error);
+          alert("Image upload failed");
+          return;
+        }
 
-      const { data, error } = await supabaseStorage.storage
-        .from("event-images")
-        .upload(fileName, image);
-
-      if (error) {
-        console.error(error);
-        alert("Image upload failed");
-        return;
+        imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
       }
 
-      imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
-    }
-
-    try {
       await axios.post("http://localhost:5000/api/events/create", {
         title,
         description,
@@ -72,6 +96,7 @@ const MyEvents = () => {
         total_tickets: parseInt(total_tickets) || 0,
         image_url: imageUrl,
         organizer_id: organizerId,
+        blockchain_event_id,
       });
 
       setTitle("");
@@ -81,10 +106,11 @@ const MyEvents = () => {
       setEventTime("");
       setTicketPrice("");
       setTotalTickets("");
-
+      setImage(null);
       setShowModal(false);
 
       fetchEvents();
+
     } catch (err) {
       console.error("Error creating event:", err.response?.data || err.message);
       alert("Failed to create event. Check console for details.");
@@ -250,7 +276,6 @@ const MyEvents = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded w-96">

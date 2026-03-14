@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../../components/Navigation";
+import EventTicketABI from "../../EventTicketABI.json";
+import { ethers } from "ethers";
 
 const Events = () => {
     const [events, setEvents] = useState([]);
@@ -8,6 +10,8 @@ const Events = () => {
     const [ticketsToBuy, setTicketsToBuy] = useState(1);
     const [account, setAccount] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+
+    const contractAddress = "0xfEa8b30718FC87208aD682C6Aefd789fD21F80dF"
 
     useEffect(() => {
         fetchEvents();
@@ -19,6 +23,56 @@ const Events = () => {
             setEvents(res.data);
         } catch (err) {
             console.error("Error fetching events:", err.response?.data || err.message);
+        }
+    };
+
+    const getTicketsOnChain = async (blockchainEventId) => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, EventTicketABI, provider);
+        const ticketsAvailable = await contract.eventTicketsAvailable(BigInt(blockchainEventId));
+        return Number(ticketsAvailable);
+    };
+
+    const buyTickets = async (event, ticketsToBuy) => {
+        if (!account || !window.ethereum) return alert("Connect wallet first");
+
+        try {
+            const provider = new ethers.BrowserProvider(window.ethereum); 
+            const signer = await provider.getSigner();
+
+            const contract = new ethers.Contract(contractAddress, EventTicketABI, signer);
+
+            const blockchainEventIdBN = BigInt(event.blockchain_event_id);
+            const pricePerTicketBN = ethers.parseUnits(event.ticket_price.toString(), "wei");
+
+            const quantity = Number(ticketsToBuy);
+
+            const tx = await contract.buyTicket(blockchainEventIdBN, quantity, pricePerTicketBN, {
+                value: pricePerTicketBN * BigInt(quantity),
+            });
+
+            await tx.wait(); 
+            alert(`Successfully bought ${quantity} ticket(s) for "${event.title}"`);
+
+            const updatedTickets = await getTicketsOnChain(event.blockchain_event_id);
+
+            setSelectedEvent(prev => ({
+                ...prev,
+                total_tickets: updatedTickets,
+            }));
+
+            setEvents(prevEvents =>
+                prevEvents.map(e =>
+                    e.id === event.id ? { ...e, total_tickets: updatedTickets } : e
+                )
+            );
+
+            await axios.put(`http://localhost:5000/api/events/updateTickets/${event.id}`, {
+                total_tickets: updatedTickets
+            });
+        } catch (err) {
+            console.error("Ticket purchase failed:", err);
+            alert("Ticket purchase failed. Check console for details.");
         }
     };
 
@@ -117,7 +171,7 @@ const Events = () => {
                                     min={1}
                                     max={selectedEvent.total_tickets}
                                     value={ticketsToBuy}
-                                    onChange={(e) => setTicketsToBuy(e.target.value)}
+                                    onChange={(e) => setTicketsToBuy(Number(e.target.value))}
                                     className="border px-2 py-1 rounded w-20"
                                 />
                                 {!account ? (
@@ -140,7 +194,7 @@ const Events = () => {
                                 )}
 
                                 <button
-                                    onClick={() => alert("Buy tickets placeholder")}
+                                    onClick={() => buyTickets(selectedEvent, ticketsToBuy)}
                                     className="bg-green-500 text-white px-3 py-1 rounded"
                                 >
                                     Buy Tickets
