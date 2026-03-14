@@ -164,16 +164,25 @@ const Events = () => {
 
                                 <div className="mt-auto">
                                     <button
-                                        onClick={() => setSelectedEvent(event)}
-                                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer"
-                                        style={{ backgroundColor: "#111827", color: "#fff" }}
-                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = "#1f2937"}
-                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = "#111827"}
+                                        onClick={() => event.total_tickets > 0 && setSelectedEvent(event)}
+                                        disabled={event.total_tickets === 0}
+                                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition
+                                        ${event.total_tickets === 0 
+                                            ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                                            : "cursor-pointer"}
+                                        `}
+                                        style={event.total_tickets === 0 ? {} : { backgroundColor: "#111827", color: "#fff" }}
+                                        onMouseEnter={e => {
+                                            if (event.total_tickets > 0) e.currentTarget.style.backgroundColor = "#1f2937";
+                                        }}
+                                        onMouseLeave={e => {
+                                            if (event.total_tickets > 0) e.currentTarget.style.backgroundColor = "#111827";
+                                        }}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                                         </svg>
-                                        View & Buy Tickets
+                                        {event.total_tickets === 0 ? "Sold Out" : "View & Buy Tickets"}
                                     </button>
                                 </div>
                             </div>
