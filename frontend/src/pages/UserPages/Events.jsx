@@ -19,7 +19,7 @@ const Events = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/events");
+            const res = await axios.get("https://laufticks-backend.onrender.com/api/events");
             setEvents(res.data);
         } catch (err) {
             console.error("Error fetching events:", err.response?.data || err.message);
@@ -52,7 +52,7 @@ const Events = () => {
             setEvents(prevEvents =>
                 prevEvents.map(e => e.id === event.id ? { ...e, total_tickets: updatedTickets } : e)
             );
-            await axios.put(`http://localhost:5000/api/events/updateTickets/${event.id}`, {
+            await axios.put(`https://laufticks-backend.onrender.com/api/events/updateTickets/${event.id}`, {
                 total_tickets: updatedTickets
             });
         } catch (err) {

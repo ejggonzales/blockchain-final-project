@@ -29,7 +29,7 @@ const MyEvents = () => {
 
   const fetchEvents = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/events/organizer/${organizerId}`
+      `https://laufticks-backend.onrender.com/api/events/organizer/${organizerId}`
     );
     setEvents(res.data);
   };
@@ -107,7 +107,7 @@ const MyEvents = () => {
         imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
       }
 
-    await axios.post("http://localhost:5000/api/events/create", {
+    await axios.post("https://laufticks-backend.onrender.com/api/events/create", {
       title,
       description,
       location,
@@ -140,7 +140,7 @@ const MyEvents = () => {
     const formattedDate = event_date + "T00:00:00";
 
     await axios.put(
-      `http://localhost:5000/api/events/update/${editingEventId}`,
+      `https://laufticks-backend.onrender.com/api/events/update/${editingEventId}`,
       {
         title,
         description,
@@ -159,7 +159,7 @@ const MyEvents = () => {
 
   const deleteEvent = async (id) => {
     if (!window.confirm("Delete this event?")) return;
-    await axios.delete(`http://localhost:5000/api/events/delete/${id}`);
+    await axios.delete(`https://laufticks-backend.onrender.com/api/events/delete/${id}`);
     fetchEvents();
   };
 
