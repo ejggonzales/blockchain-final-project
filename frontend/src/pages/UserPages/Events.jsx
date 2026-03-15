@@ -152,7 +152,11 @@ const Events = () => {
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        <span>{event.event_time}</span>
+                                        <span>{new Date(`1970-01-01T${event.event_time}`).toLocaleTimeString([], {
+                                            hour: 'numeric',
+                                            minute: '2-digit',
+                                        })}
+                                        </span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,9 +171,9 @@ const Events = () => {
                                         onClick={() => event.total_tickets > 0 && setSelectedEvent(event)}
                                         disabled={event.total_tickets === 0}
                                         className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition
-                                        ${event.total_tickets === 0 
-                                            ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
-                                            : "cursor-pointer"}
+                                        ${event.total_tickets === 0
+                                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                : "cursor-pointer"}
                                         `}
                                         style={event.total_tickets === 0 ? {} : { backgroundColor: "#111827", color: "#fff" }}
                                         onMouseEnter={e => {
