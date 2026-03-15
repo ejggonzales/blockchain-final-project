@@ -5,7 +5,24 @@ const { findUserByEmail, createUser } = require('../models/userModel');
 exports.register = async (req, res) => {
 
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
+
+    //CONFIRMING PASSWORD ARE THE SAME
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    //PASSWORD CONDITION 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters and include uppercase, lowercase, and a number",
+      });
+    }
+    
+
     const existingUser = await findUserByEmail(email);
 
     if (existingUser) {
@@ -28,8 +45,9 @@ exports.register = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json(error.message);
-  }
+      console.error(error.response?.data); 
+      alert(error.response?.data?.message || "Registration failed");
+    }
 };
 
 exports.login = async (req, res) => {
@@ -64,7 +82,7 @@ exports.login = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 
 };

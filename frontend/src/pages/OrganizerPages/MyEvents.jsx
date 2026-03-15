@@ -171,7 +171,7 @@ const MyEvents = () => {
       {/* Main Content */}
       <div className="pt-32 max-w-7xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-semibold text-gray-800">My Events</h1>
+          <h1 className="text-3xl font-bold text-gray-800 uppercase">My Events</h1>
           <button
             onClick={openCreateModal}
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg shadow-md transition cursor-pointer"

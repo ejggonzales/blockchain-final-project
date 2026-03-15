@@ -79,7 +79,7 @@ function Login() {
               />
             </div>
 
-            <button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold transition">
+            <button className="w-full cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold transition">
               Login
             </button>
 

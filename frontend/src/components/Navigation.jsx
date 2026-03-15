@@ -33,7 +33,7 @@ function Navigation({ role }) {
         {role === "user" && (
           <>
             <NavLink to="/events">Events</NavLink>
-            <NavLink to="/my-tickets">My Tickets</NavLink>
+            {/*<NavLink to="/my-tickets">My Tickets</NavLink>*/}
           </>
         )}
 

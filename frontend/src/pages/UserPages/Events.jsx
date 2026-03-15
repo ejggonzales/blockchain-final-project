@@ -86,7 +86,7 @@ const Events = () => {
             <div className="pt-32 max-w-7xl mx-auto p-6">
 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                    <h1 className="text-3xl font-semibold text-gray-800">Events</h1>
+                    <h1 className="text-3xl font-bold text-gray-800 uppercase">Events</h1>
 
                     <div className="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
